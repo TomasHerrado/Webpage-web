@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #8B1E3F;
+  --color-secondary: #1A1A1A;
+  --color-accent: #D4AF37;
+  --font-heading: "Playfair Display", serif;
+  --font-body: "Inter", sans-serif;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
