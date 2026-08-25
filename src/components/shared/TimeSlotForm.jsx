@@ -36,8 +36,8 @@ function TimeSlotForm({ onSubmit, editingSlot, onCancelEdit }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-wrap gap-3 items-end bg-[#1a1a1a] border border-white/5 rounded-xl p-4">
-      <div className="flex flex-col gap-1">
+    <form onSubmit={handleSubmit} className="flex flex-wrap gap-3 items-end bg-[#1a1a1a] border border-white/5 rounded-xl p-4 w-full">
+      <div className="flex flex-col gap-1 flex-1 min-w-[120px]">
         <label className="text-xs text-white/60">Día</label>
         <select
           name="dayOfWeek" value={formData.dayOfWeek} onChange={handleChange}
@@ -49,7 +49,7 @@ function TimeSlotForm({ onSubmit, editingSlot, onCancelEdit }) {
         </select>
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 flex-1 min-w-[120px]">
         <label className="text-xs text-white/60">Horario</label>
         <input
           type="time" name="startTime" value={formData.startTime} onChange={handleChange}
@@ -58,7 +58,7 @@ function TimeSlotForm({ onSubmit, editingSlot, onCancelEdit }) {
         />
       </div>
 
-      <div className="flex flex-col gap-1 w-32">
+      <div className="flex flex-col gap-1 flex-1 min-w-[120px]">
         <label className="text-xs text-white/60">Capacidad</label>
         <input
           type="number" name="maxCapacity" value={formData.maxCapacity} onChange={handleChange}

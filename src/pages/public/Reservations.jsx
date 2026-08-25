@@ -59,7 +59,7 @@ function Reservations() {
 
   if (confirmedReservation) {
     return (
-      <div className="max-w-5xl mx-auto px-6 py-16">
+      <div className="max-w-5xl mx-auto px-4 md:px-6 py-10 md:py-16">
         <ReservationConfirmation
           reservation={confirmedReservation}
           onNewReservation={handleNewReservation}
@@ -69,7 +69,7 @@ function Reservations() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-16">
+    <div className="max-w-5xl mx-auto px-4 md:px-6 py-10 md:py-16">
       <h1 className="text-3xl md:text-4xl font-heading text-center mb-10">
         Reservá tu mesa
       </h1>

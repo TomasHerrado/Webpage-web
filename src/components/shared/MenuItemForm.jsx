@@ -57,7 +57,7 @@ function MenuItemForm({ categories, onSubmit, editingItem, onCancelEdit }) {
     <form onSubmit={handleSubmit} className="bg-[#1a1a1a] border border-white/5 rounded-xl p-5 flex flex-col gap-4">
       <h3 className="font-heading text-lg">{editingItem ? 'Editar plato' : 'Nuevo plato'}</h3>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="flex flex-col gap-1">
           <label className="text-xs text-white/60">Nombre</label>
           <input
@@ -98,7 +98,7 @@ function MenuItemForm({ categories, onSubmit, editingItem, onCancelEdit }) {
           />
         </div>
 
-        <div className="flex flex-col gap-1 col-span-2">
+        <div className="flex flex-col gap-1 sm:col-span-2">
           <label className="text-xs text-white/60">URL de imagen</label>
           <input
             type="text" name="imageUrl" value={formData.imageUrl} onChange={handleChange}
@@ -106,7 +106,7 @@ function MenuItemForm({ categories, onSubmit, editingItem, onCancelEdit }) {
           />
         </div>
 
-        <div className="flex flex-col gap-1 col-span-2">
+        <div className="flex flex-col gap-1 sm:col-span-2">
           <label className="text-xs text-white/60">Descripción</label>
           <textarea
             name="description" value={formData.description} onChange={handleChange} rows={2}

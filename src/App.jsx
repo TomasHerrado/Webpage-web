@@ -2,9 +2,11 @@ import { useEffect } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { useThemeStore } from './store/themeStore'
 import AppRoutes from './routes/AppRoutes'
+import ToastContainer from './components/shared/ToastContainer'
+import ConfirmDialog from './components/shared/ConfirmDialog'
 
 function App() {
-  const { restaurant, isLoading, error, loadRestaurantConfig } = useThemeStore()
+  const { isLoading, error, loadRestaurantConfig } = useThemeStore()
 
   useEffect(() => {
     loadRestaurantConfig()
@@ -16,6 +18,8 @@ function App() {
   return (
     <BrowserRouter>
       <AppRoutes />
+      <ToastContainer />
+      <ConfirmDialog />
     </BrowserRouter>
   )
 }

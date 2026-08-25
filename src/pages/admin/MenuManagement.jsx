@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { menuService } from '../../services/menuService'
 import CategoryForm from '../../components/shared/CategoryForm'
 import MenuItemForm from '../../components/shared/MenuItemForm'
+import { useToastStore } from '../../store/toastStore'
+import { useConfirmStore } from '../../store/confirmStore'
 
 function MenuManagement() {
   const [categories, setCategories] = useState([])
@@ -10,6 +12,9 @@ function MenuManagement() {
 
   const [editingCategory, setEditingCategory] = useState(null)
   const [editingItem, setEditingItem] = useState(null)
+
+  const showToast = useToastStore((state) => state.showToast)
+  const requestConfirm = useConfirmStore((state) => state.requestConfirm)
 
   const loadMenu = async () => {
     try {
@@ -26,50 +31,78 @@ function MenuManagement() {
     loadMenu()
   }, [])
 
-  // --- Categorías ---
   const handleCategorySubmit = async (payload) => {
-    if (editingCategory) {
-      await menuService.updateCategory(editingCategory.id, payload)
-      setEditingCategory(null)
-    } else {
-      await menuService.createCategory(payload)
+    try {
+      if (editingCategory) {
+        await menuService.updateCategory(editingCategory.id, payload)
+        setEditingCategory(null)
+        showToast('Categoría actualizada.')
+      } else {
+        await menuService.createCategory(payload)
+        showToast('Categoría creada.')
+      }
+      loadMenu()
+    } catch (err) {
+      showToast(err.response?.data?.error || 'No se pudo guardar la categoría.', 'error')
     }
-    loadMenu()
   }
 
   const handleDeleteCategory = async (id) => {
-    if (!confirm('¿Eliminar esta categoría y todos sus platos?')) return
-    await menuService.deleteCategory(id)
-    loadMenu()
+    const confirmed = await requestConfirm('¿Eliminar esta categoría y todos sus platos?')
+    if (!confirmed) return
+
+    try {
+      await menuService.deleteCategory(id)
+      showToast('Categoría eliminada.')
+      loadMenu()
+    } catch (err) {
+      showToast('No se pudo eliminar la categoría.', 'error')
+    }
   }
 
-  // --- Platos ---
   const handleItemSubmit = async (payload) => {
-    if (editingItem) {
-      await menuService.updateItem(editingItem.id, payload)
-      setEditingItem(null)
-    } else {
-      await menuService.createItem(payload)
+    try {
+      if (editingItem) {
+        await menuService.updateItem(editingItem.id, payload)
+        setEditingItem(null)
+        showToast('Plato actualizado.')
+      } else {
+        await menuService.createItem(payload)
+        showToast('Plato creado.')
+      }
+      loadMenu()
+    } catch (err) {
+      showToast(err.response?.data?.error || 'No se pudo guardar el plato.', 'error')
     }
-    loadMenu()
   }
 
   const handleDeleteItem = async (id) => {
-    if (!confirm('¿Eliminar este plato?')) return
-    await menuService.deleteItem(id)
-    loadMenu()
+    const confirmed = await requestConfirm('¿Eliminar este plato?')
+    if (!confirmed) return
+
+    try {
+      await menuService.deleteItem(id)
+      showToast('Plato eliminado.')
+      loadMenu()
+    } catch (err) {
+      showToast('No se pudo eliminar el plato.', 'error')
+    }
   }
 
   const handleToggleAvailability = async (id) => {
-    await menuService.toggleItemAvailability(id)
-    loadMenu()
+    try {
+      await menuService.toggleItemAvailability(id)
+      loadMenu()
+    } catch (err) {
+      showToast('No se pudo actualizar la disponibilidad.', 'error')
+    }
   }
 
   const startEditItem = (item, categoryId) => {
     setEditingItem({ ...item, categoryId })
   }
 
-  if (isLoading) return <p className="text-white/60">Cargando...</p>
+  if (isLoading) return <PageLoader />
   if (error) return <p className="text-red-400">{error}</p>
 
   return (
@@ -91,8 +124,8 @@ function MenuManagement() {
               className="flex items-center gap-2 bg-[#1a1a1a] border border-white/10 rounded-full px-4 py-1.5 text-sm"
             >
               <span>{cat.name}</span>
-              <button onClick={() => setEditingCategory(cat)} className="text-white/50 hover:text-accent">✎</button>
-              <button onClick={() => handleDeleteCategory(cat.id)} className="text-white/50 hover:text-red-400">✕</button>
+              <button onClick={() => setEditingCategory(cat)} className="text-white/50 hover:text-accent transition-colors">✎</button>
+              <button onClick={() => handleDeleteCategory(cat.id)} className="text-white/50 hover:text-red-400 transition-colors">✕</button>
             </div>
           ))}
         </div>
@@ -130,13 +163,13 @@ function MenuManagement() {
                     <p className="text-xs text-white/40">{item.description}</p>
                   </div>
                   <div className="flex gap-3 text-sm">
-                    <button onClick={() => handleToggleAvailability(item.id)} className="text-white/50 hover:text-accent">
+                    <button onClick={() => handleToggleAvailability(item.id)} className="text-white/50 hover:text-accent transition-colors">
                       {item.available ? 'Desactivar' : 'Activar'}
                     </button>
-                    <button onClick={() => startEditItem(item, cat.id)} className="text-white/50 hover:text-accent">
+                    <button onClick={() => startEditItem(item, cat.id)} className="text-white/50 hover:text-accent transition-colors">
                       Editar
                     </button>
-                    <button onClick={() => handleDeleteItem(item.id)} className="text-white/50 hover:text-red-400">
+                    <button onClick={() => handleDeleteItem(item.id)} className="text-white/50 hover:text-red-400 transition-colors">
                       Eliminar
                     </button>
                   </div>
@@ -146,6 +179,15 @@ function MenuManagement() {
           </div>
         ))}
       </div>
+    </div>
+  )
+}
+
+function PageLoader() {
+  return (
+    <div className="flex items-center gap-2 text-white/50 text-sm">
+      <span className="w-4 h-4 border-2 border-white/20 border-t-accent rounded-full animate-spin" />
+      Cargando...
     </div>
   )
 }

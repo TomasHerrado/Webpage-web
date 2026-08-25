@@ -14,4 +14,14 @@ export const reservationService = {
   cancel: async (code) => {
     await api.delete(`/reservations/${code}`)
   },
+
+  // --- Admin ---
+  getAllForAdmin: async () => {
+    const { data } = await api.get('/admin/reservations')
+    return data
+  },
+
+  updateStatus: async (id, status) => {
+    await api.patch(`/admin/reservations/${id}/status`, { status })
+  },
 }
